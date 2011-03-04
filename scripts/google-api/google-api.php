@@ -420,8 +420,10 @@ if( !$jsonNgt = read($outDir."ngt.json") ) {
 }
 
 # '.$outDir.'\ This extra slash below is intended for escaping
+# It's using single quotes,so double quotes shouldn't need escaped.  
+# The slash just caused errors for me
 $js = 'var options = {
-  host: "'.$outDir.'\",
+  host: "'.$outDir.'",
   scaleControl: false,
   navigationControl: true,
   streetViewControl: false,
