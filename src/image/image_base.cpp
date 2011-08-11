@@ -1,9 +1,8 @@
 // Distributed under the BSD License, see accompanying LICENSE.txt
 // (C) Copyright 2010 John-John Tedro et al.
 #include "image/image_base.hpp"
-#include "image/virtual_image.hpp"
 
-#include <map>
+#include <cstring>
 
 #include <boost/numeric/conversion/cast.hpp>
 
@@ -19,22 +18,49 @@ void image_base::fill(color &q)
 
 void image_base::clear() {
   boost::shared_array<color> line(new color[get_width()]);
-  memset(line.get(), 0x0, get_width() * sizeof(color));
+  ::memset(line.get(), 0x0, get_width() * sizeof(color));
 
   for (pos_t y = 0; y < get_height(); y++)
     set_line(y, 0, get_width(), line.get());
 }
 
-void image_base::composite(int xoffset, int yoffset, boost::shared_ptr<image_operations> img)
+void image_base::composite(int x, int y, image_operations_ptr opers)
 {
-  std::vector<image_operation>::size_type i = img->operations.size();
+  std::vector<image_operation>::size_type i = opers->operations.size();
   
-  align(xoffset, yoffset, img->maxx, img->maxy);
+  align(x, y, opers->max_x, opers->max_y);
   
-  while (i--) {
-    image_operation op = img->operations[i];
-    blend_pixel(xoffset + op.x, yoffset + op.y, op.c);
+  while (i--)
+  {
+    image_operation op = opers->operations[i];
+    blend_pixel(x + op.x, y + op.y, op.c);
   }
+}
+
+void image_base::drawLine(pos_t x1, pos_t y1, pos_t x2, pos_t y2, color &c)
+{
+    int sx, sy;
+    int dx = abs(x2-x1);
+    int dy = abs(y2-y1);
+    sx = (x1<x2) ? 1 : -1 ;
+    sy = (y1<y2) ? 1 : -1 ;
+    int err = dx-dy;
+
+    do
+    {
+        this->set_pixel(x1, y1, c);
+        int e2 = 2*err;
+        if(e2 > -dy)
+        {
+            err -= dy;
+            x1 += sx;
+        }
+        if(e2 < dx)
+        {
+            err += dx;
+            y1 += sy;
+        }
+    } while(x1 != x2 || y1 != y2);
 }
 
 void image_base::safe_blend_pixel(pos_t x, pos_t y, color &c)
@@ -84,18 +110,4 @@ void image_base::resize(image_ptr target) {
       }
     }
   }
-}
-
-std::map<point2, image_base*> image_split(image_base* base, int pixels)
-{
-  std::map<point2, image_base*> map;
-  
-  for (image_base::pos_t w = 0, px = 0; w < base->get_width(); w += pixels, px++) {
-    for (image_base::pos_t h = 0, py = 0; h < base->get_height(); h += pixels, py++) {
-      point2 p(px, py);
-      map[p] = new virtual_image(pixels, pixels, base, w, h);
-    }
-  }
-  
-  return map;
 }
