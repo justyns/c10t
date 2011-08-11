@@ -228,9 +228,10 @@ function isPlural($num, $word){
 
 $_start = time();
 
-$fl = fopen($outHTML, "w+"); 
-fputs($fl, $output);
-fclose($fl);
+// Why are we writing to outhtml already?
+//$fl = fopen($outHTML, "w+"); 
+//fputs($fl, $output);
+//fclose($fl);
 
 
 # Loop and call generate for day/night and each zoom level
