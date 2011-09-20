@@ -1,10 +1,16 @@
 #ifndef STATISTICS_HPP
 #define STATISTICS_HPP
+
+// Include this first, to evade setjmp header bug
+#include "image/format/png.hpp"
+
 #include <string>
 #include <vector>
 #include <set>
 #include <iostream>
 #include <exception>
+
+#include "image/format/png.hpp"
 
 #include "global.hpp"
 #include "players.hpp"
@@ -13,7 +19,6 @@
 #include "image/memory_image.hpp"
 #include "image/cached_image.hpp"
 #include "image/algorithms.hpp"
-#include "image/format/png.hpp"
 
 #include "mc/world.hpp"
 #include "mc/blocks.hpp"

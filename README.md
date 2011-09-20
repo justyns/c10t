@@ -43,7 +43,7 @@ Building from Source (using cmake)
 
   1. Install dependencies:
 
-    $ sudo apt-get install cmake libpng-dev zlib1g-dev libboost-all-dev libboost-all libfreetype6-dev
+    $ sudo apt-get install build-essential cmake libpng-dev zlib1g-dev libboost-all-dev libfreetype6-dev
 
   2. Run:
 
@@ -91,3 +91,4 @@ Contributions
     Athemis - for fixing beta 1.2 compatibility.
     sn4kebite - for implementing Wool colors.
     ekryyn - for implementing the altitude graph!
+    UniversE - for epic center calculation, and saving the api!
